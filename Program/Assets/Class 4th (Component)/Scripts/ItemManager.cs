@@ -9,6 +9,8 @@ public class ItemManager : MonoBehaviour
 
     [SerializeField] Item [ ] items;
 
+    int count = 0;
+
     void Start()
     {
         Initialized();
@@ -21,14 +23,16 @@ public class ItemManager : MonoBehaviour
         // GetKeyUp : ≈∞∏¶ ∂√¿ª ∂ß
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            for (int i = 0; i < items.Length; i++)
-            {
-                int count = items.Length - 1 - i;
+            items[count++].gameObject.SetActive(false);
 
-                items[count].gameObject.SetActive(true);
+            count = count % items.Length;
 
-                items[count - 1].gameObject.SetActive(false);
-            }
+            items[count].gameObject.SetActive(true);
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            items[count].Activate();
         }
     }
 
@@ -38,5 +42,7 @@ public class ItemManager : MonoBehaviour
         {
             items[i].gameObject.SetActive(false);
         }
+
+        items[0].gameObject.SetActive(true);
     }
 }
