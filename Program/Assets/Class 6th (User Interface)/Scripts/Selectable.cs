@@ -1,26 +1,26 @@
-using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Selectable : MonoBehaviour
 {
-    private TMP_Text tmpText;
+    [SerializeField] Text uiText;
     void Start()
     {
-        tmpText = GetComponentInChildren<TMP_Text>();
+        uiText = GetComponentInChildren<Text>();
     }
 
     public void Enter()
     {
-        tmpText.fontSize = 100;
+        uiText.fontSize = 100;
     }
 
     public void Exit()
     {
-        tmpText.fontSize = 75;
+        uiText.fontSize = 75;
     }
 
     public void Down()
     {
-        tmpText.fontSize = 50;
+        uiText.fontSize = 50;
     }
 }
