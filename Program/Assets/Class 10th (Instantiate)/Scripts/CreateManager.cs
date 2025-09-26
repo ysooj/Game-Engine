@@ -1,11 +1,12 @@
+using System.Collections;
 using System.Collections.Generic;
-using NUnit.Framework;
 using UnityEngine;
 
 public class CreateManager : MonoBehaviour
 {
     [SerializeField] int count;
     [SerializeField] float time;
+    [SerializeField] int coroutineCount;
 
     [SerializeField] GameObject prefab;
     [SerializeField] List<GameObject> list = new List<GameObject>();
@@ -18,6 +19,8 @@ public class CreateManager : MonoBehaviour
         //  clone.transform.position = new Vector3(1, 1, 1);
 
         Create();
+
+        StartCoroutine(Coroutine());
     }
 
     void Create()
@@ -31,15 +34,47 @@ public class CreateManager : MonoBehaviour
         }
     }
 
-    void Update()
+    IEnumerator Coroutine()
     {
-        // 5초마다 로그를 찍어주면 된다.
-        time += Time.deltaTime;
-
-        if (time >= 5.0f)
+        while(coroutineCount < list.Count)
         {
-            Debug.Log("event call");
-            time = 0.0f;
+            int index = Random.Range(0, list.Count);
+
+            yield return new WaitForSeconds(5f);
+
+            if (list[index].activeSelf)
+            {
+                index = (index + 1) % list.Count;
+            }
+
+            list[index].SetActive(true);
+            Debug.Log("몬스터 등장");
+
+            coroutineCount++;
+            
+            //  GameObject monster = list[i];
+            //  monster.transform.position = new Vector3(i - (list.Count % 2) - 1, 0, 0);
+
+            //  monster.SetActive(false);
+            //  Debug.Log("5초 뒤 몬스터 등장");
+            //  
+            //  
+            //  //  monster.SetActive(true);
+            //  Debug.Log("몬스터 등장");
         }
+
+        Debug.Log("코루틴 종료");
     }
+
+    //  void Update()
+    //  {
+    //      // 5초마다 로그를 찍어주면 된다.
+    //      time += Time.deltaTime;
+    //  
+    //      if (time >= 5.0f)
+    //      {
+    //          Debug.Log("event call");
+    //          time = 0.0f;
+    //      }
+    //  }
 }
