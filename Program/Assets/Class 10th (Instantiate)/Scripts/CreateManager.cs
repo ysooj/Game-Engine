@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class CreateManager : MonoBehaviour
 {
-    [SerializeField] int count;
-    [SerializeField] float time;
-    [SerializeField] int coroutineCount;
+    [SerializeField] int count;             // 몬스터를 몇 개 생성할지
+    [SerializeField] float time;            // (사용 안 함)
+    [SerializeField] int coroutineCount;    // 몇 개까지 활성화했는지 추적
 
-    [SerializeField] GameObject prefab;
-    [SerializeField] List<GameObject> list = new List<GameObject>();
+    [SerializeField] GameObject prefab;     // 생성할 프리팹
+    [SerializeField] List<GameObject> list = new List<GameObject>();    // 미리 생성해둔 객체들 저장
+    [SerializeField] List<Vector3> randomPosition;
 
     void Start()
     {
@@ -18,11 +19,12 @@ public class CreateManager : MonoBehaviour
         //  
         //  clone.transform.position = new Vector3(1, 1, 1);
 
-        Create();
+        Create();                       // 미리 몬스터들을 비활성화 상태로 생성
 
-        StartCoroutine(Coroutine());
+        StartCoroutine(Coroutine());    // 코루틴 시작
     }
 
+    // count 수만큼 프리팹을 미리 만들어두고, 비활성화 상태로 리스트에 저장함
     void Create()
     {
         for (int i = 0; i < count; i++)
@@ -34,20 +36,28 @@ public class CreateManager : MonoBehaviour
         }
     }
 
+    // 5초마다 리스트에서 랜덤한 오브젝트를 찾아서 활성화 시킴
+    // 이미 활성화된 오브젝트면 인덱스를 다음으로 넘기고,
+    // coroutineCount가 list.Count에 도달하면 코루틴 종료
     IEnumerator Coroutine()
     {
         while(coroutineCount < list.Count)
         {
-            int index = Random.Range(0, list.Count);
-
             yield return new WaitForSeconds(5f);
 
-            if (list[index].activeSelf)
+            int index = Random.Range(0, list.Count);
+
+            while (list[index].activeSelf)
             {
                 index = (index + 1) % list.Count;
             }
 
+            //  int location = (index - list.Count / 2) * 2;
+            //  list[index].transform.position = new Vector3(location, 0, 0);
             list[index].SetActive(true);
+
+            list[index].transform.localPosition = randomPosition[index];
+
             Debug.Log("몬스터 등장");
 
             coroutineCount++;
