@@ -11,9 +11,13 @@ public class Control : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] Vector3 direction;
     [SerializeField] Rigidbody rigidBody;
+    [SerializeField] ForceMode forceMode;
+    private float originalSpeed;
 
     void Start()
     {
+        originalSpeed = speed;
+        forceMode = ForceMode.Force;
         rigidBody = GetComponent<Rigidbody>();
     }
 
@@ -28,6 +32,20 @@ public class Control : MonoBehaviour
     private void FixedUpdate()
     {
         // .AddForce(방향, 힘의 방식)의 방법으로 만들자.
-        rigidBody.AddForce(direction * speed, ForceMode.Force);
+        rigidBody.AddForce(direction * speed, forceMode);
+    }
+
+    public void Soar()
+    {
+        speed = 0.7f;
+        direction = Vector3.up;
+        forceMode = ForceMode.Impulse;
+    }
+
+    public void Revert()
+    {
+        speed = originalSpeed;
+        direction = Vector3.zero;
+        forceMode = ForceMode.Force;
     }
 }
